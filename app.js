@@ -26,9 +26,49 @@ var express = require('express'),
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
 
-    app.get('/', function(req,res){
-        res.render('index')
-    })
+    const { Pool } = require('pg')
+    const pool = new Pool({
+        connectionString: connect,
+      })
+
+    app.get("/", function(req, res, next) {
+        pool.connect(function(err, client, done) {
+            if (err) {
+                console.log("not able to get connection " + err);
+                res.status(400).send(err);
+            }
+            client.query("SELECT * FROM recipes", function(err, result) {
+                if (err) {
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                res.render('index', {recipes:result.rows});
+                done();
+            });
+        });
+    });
+
+
+
+
+
+
+    // app.get('/', function(req,res){
+    //     //PG Connect
+    //     pg.connect(connect, function(err, client, done){
+    //         if (err){
+    //             return console.error('erroe fetching client from pool',err);
+    //         }
+    //         client.query('SELECT * FROM recipes', function(err, result){
+    //         if(err){
+    //             return console.error('error running query', err);
+    //         }
+    //         res.render('index', {recipes:result.rows});
+    //         done();    
+
+    //         });
+    //     });
+    // });
 
     //Server
     app.listen(3000, function(){
