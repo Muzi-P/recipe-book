@@ -47,29 +47,26 @@ var express = require('express'),
             });
         });
     });
+    
+    app.post('/add', function(req,res) {
+        pool.connect(function(err, client, done) {
+            if (err) {
+                
+                console.log("not able to get connection " + err);
+                res.status(400).send(err);
+            }
+            const query = {
+                text: 'INSERT INTO recipes(name, ingredients, directions) VALUES($1,$2,$3)',
+                values:  [req.body.name, req.body.ingredients, req.body.directions],
+              }
 
-
-
-
-
-
-    // app.get('/', function(req,res){
-    //     //PG Connect
-    //     pg.connect(connect, function(err, client, done){
-    //         if (err){
-    //             return console.error('erroe fetching client from pool',err);
-    //         }
-    //         client.query('SELECT * FROM recipes', function(err, result){
-    //         if(err){
-    //             return console.error('error running query', err);
-    //         }
-    //         res.render('index', {recipes:result.rows});
-    //         done();    
-
-    //         });
-    //     });
-    // });
-
+        client.query(query, (err, result) => {
+            res.redirect('/');
+        });
+               
+        });
+        
+    });
     //Server
     app.listen(3000, function(){
         console.log('Server Started on Port 3000');
