@@ -24,7 +24,7 @@
                 <span class="glyphicon glyphicon-edit" aria-
                 hidden="true"></span> 
                 </button>
-                <button class="btn btn-danger delete-recipe">
+                <button class="btn btn-danger delete-recipe" data-id = "{id}">
                 <span class="glyphicon glyphicon-remove" aria-
                 hidden="true"></span> 
                 </button>

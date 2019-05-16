@@ -58,7 +58,7 @@ var express = require('express'),
             const query = {
                 text: 'INSERT INTO recipes(name, ingredients, directions) VALUES($1,$2,$3)',
                 values:  [req.body.name, req.body.ingredients, req.body.directions],
-              }
+            }
 
         client.query(query, (err, result) => {
             res.redirect('/');
@@ -66,6 +66,27 @@ var express = require('express'),
                
         });
         
+    });
+
+
+
+    app.delete('/delete/:id', function(req,res){
+        pool.connect(function(err, client, done) {
+            if (err) {
+                
+                console.log("not able to get connection " + err);
+                res.status(400).send(err);
+            }
+            const query = {
+                text: 'DELETE FROM recipes WHERE id = $1',
+                values:  [req.params.id],
+            }
+
+            client.query(query, (err, result) => {
+                res.sendStatus(200);
+            });
+               
+        });
     });
     //Server
     app.listen(3000, function(){
