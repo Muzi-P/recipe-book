@@ -88,6 +88,30 @@ var express = require('express'),
                
         });
     });
+
+    
+    app.post('/edit', function(req,res){
+        pool.connect(function(err, client, done) {
+           
+            if (err) {
+                
+                console.log("not able to get connection " + err);
+                res.status(400).send(err);
+            }
+            const query = {
+                text: 'UPDATE recipes SET name=$1, ingredients=$2, directions=$3 WHERE id = $4',
+                values:  [req.body.name, req.body.ingredients, req.body.directions, req.body.id],
+            }
+
+            client.query(query, (err, result) => {
+                res.redirect('/');
+            });
+               
+        });
+    });
+
+    
+    
     //Server
     app.listen(3000, function(){
         console.log('Server Started on Port 3000');
